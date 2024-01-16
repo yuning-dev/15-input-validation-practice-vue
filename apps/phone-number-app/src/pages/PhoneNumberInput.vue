@@ -3,12 +3,12 @@
         <div :class="$style.title">The ultimate phone number app</div>
         <div :class="$style.instruction">
             Enter your phone number here (without any spaces):
-            <input type="text" v-model="phoneNumber">
+            <input type="text" v-model="phoneNumber" data-testid="input">
         </div>
-        <div :class="$style.errorMessage">
+        <div :class="$style.errorMessage" data-testid="errorDiv">
             {{ errorMessagePrecedence }}
         </div>
-        <button :class="$style.submitBtn" :disabled=isButtonDisabled>Submit</button>
+        <button :class="$style.submitBtn" :disabled="isButtonDisabled" data-testid="submitBtn">Submit</button>
     </div>
 </template>
 
@@ -19,7 +19,6 @@ export default {
     data() {
         return {
             phoneNumber: '',
-            isButtonDisabled: true,
         }
     },
     computed: {
@@ -52,6 +51,7 @@ export default {
             }
         },
         errorMessagePrecedence() {
+            // TODO: make data driven (with J <3)
             const errorMessage1 = 'Please enter a phone number'
             const errorMessage2 = 'Please only enter numbers'
             const errorMessage3 = 'Please enter 11 digits'
@@ -70,9 +70,16 @@ export default {
                 return errorMessage4
             }
             if (!this.isFieldEmpty && !this.isNotOnlyNumbers && !this.lessThan11Digits && !this.moreThan11Digits) {
-                this.isButtonDisabled = false
+                return null
             }
-        }
+        },
+        isButtonDisabled() {
+            if (this.errorMessagePrecedence === null) {
+                return false
+            } else {
+                return true
+            }
+        },
     }
 }
 
