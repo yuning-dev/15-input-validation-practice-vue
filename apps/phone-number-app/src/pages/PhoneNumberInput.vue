@@ -8,11 +8,15 @@
         <div :class="$style.errorMessage" data-testid="errorDiv">
             {{ errorMessagePrecedence }}
         </div>
-        <button :class="$style.submitBtn" :disabled="isButtonDisabled" data-testid="submitBtn">Submit</button>
+        <button :class="$style.submitBtn" :disabled="isButtonDisabled" data-testid="submitBtn" @click="updateStore">Submit</button>
     </div>
 </template>
 
 <script>
+
+import { usePhoneNumberStore } from '../stores/user.js'
+import { mapStores, mapWritableState } from 'pinia'
+
 
 export default {
     name: 'PhoneNumberInput',
@@ -22,6 +26,10 @@ export default {
         }
     },
     computed: {
+        ...mapStores(usePhoneNumberStore),
+        ...mapWritableState(usePhoneNumberStore, [
+            'phoneNumberVar'
+        ]),
         isFieldEmpty() {
             const errorMessage = 'Please enter a phone number'
             if (this.phoneNumber === '') {
@@ -79,6 +87,10 @@ export default {
             } else {
                 return true
             }
+        },
+        updateStore() {
+            this.phoneNumberVar = this.phoneNumber
+            console.log(this.phoneNumberVar)
         },
     }
 }

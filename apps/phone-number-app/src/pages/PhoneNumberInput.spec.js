@@ -91,6 +91,6 @@ describe('phone number input page', () => {
         expect(errorDiv.text().includes(errorMessage3)).toBe(false)
         expect(errorDiv.text().includes(errorMessage4)).toBe(true)
 
-    })
-    
+    }),
+
 })
