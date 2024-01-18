@@ -3,7 +3,7 @@
         <div :class="$style.title">The ultimate phone number app</div>
         <div :class="$style.instruction">
             Enter your phone number here (without any spaces):
-            <input type="text" v-model="phoneNumber" data-testid="input">
+            <input type="text" v-model="newPhoneNumber" data-testid="input">
         </div>
         <div :class="$style.errorMessage" data-testid="errorDiv">
             {{ errorMessagePrecedence }}
@@ -13,6 +13,7 @@
 </template>
 
 <script>
+// TODO - move all pages to their own folders
 
 import { usePhoneNumberStore } from '../stores/user.js'
 import { mapStores, mapWritableState } from 'pinia'
@@ -22,39 +23,41 @@ export default {
     name: 'PhoneNumberInput',
     data() {
         return {
-            phoneNumber: '',
+            newPhoneNumber: '',
         }
     },
     computed: {
+        // TODO - use mapWritableState key renaming
         ...mapStores(usePhoneNumberStore),
         ...mapWritableState(usePhoneNumberStore, [
-            'phoneNumberVar'
+            'phoneNumber'
         ]),
         isFieldEmpty() {
             const errorMessage = 'Please enter a phone number'
-            if (this.phoneNumber === '') {
+            if (this.newPhoneNumber === '') {
                 return true
             }
         },
         isNotOnlyNumbers() {
+            // TODO - string method / regex for finding alpha numeric characters
             const errorMessage = 'Please only enter numbers'
-            let numberFromInput = Number(this.phoneNumber)
+            let numberFromInput = Number(this.newPhoneNumber)
             if (Number.isNaN(numberFromInput)) {
                 return true
             }
-            if (this.phoneNumber.includes('.') || this.phoneNumber.includes(' ') || this.phoneNumber.includes('-')) {
+            if (this.newPhoneNumber.includes('.') || this.newPhoneNumber.includes(' ') || this.newPhoneNumber.includes('-')) {
                 return true
             }
         },
         lessThan11Digits() {
             const errorMessage = 'Please enter 11 digits'
-            if (this.phoneNumber.length < 11) {
+            if (this.newPhoneNumber.length < 11) {
                 return true
             }
         },
         moreThan11Digits() {
             const errorMessage = 'Ahaah!! Too many digits detected. Please enter only 11 digits.'
-            if (this.phoneNumber.length > 11) {
+            if (this.newPhoneNumber.length > 11) {
                 return true
             }
         },
@@ -88,9 +91,11 @@ export default {
                 return true
             }
         },
+    },
+    methods: {
         updateStore() {
-            this.phoneNumberVar = this.phoneNumber
-            console.log(this.phoneNumberVar)
+            this.phoneNumber = this.newPhoneNumber
+            this.$router.push('/stats')
         },
     }
 }

@@ -27,6 +27,7 @@ describe('phone number input page', () => {
         const errorDiv = wrapper.find('[data-testid="errorDiv"]')
         expect(errorDiv.text()).toEqual('')
 
+        // TODO - update submitButton testing. See here https://stackoverflow.com/questions/70207571/using-vue-test-utils-how-can-i-check-if-a-button-is-disabled
         // const submitBtn = wrapper.find('[data-testid="submitBtn"]')
         // expect(submitBtn.attributes().disabled).toBe(false)
     })
