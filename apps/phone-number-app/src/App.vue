@@ -1,9 +1,13 @@
 <script setup>
-  import PhoneNumberInput from './pages/PhoneNumberInput.vue'
+  import TopBar from './components/TopBar.vue'
 </script>
 
 <template>
-  <PhoneNumberInput />
+<header>
+  <TopBar />
+</header>
+  
+  <router-view></router-view>
 </template>
 
 <style scoped>

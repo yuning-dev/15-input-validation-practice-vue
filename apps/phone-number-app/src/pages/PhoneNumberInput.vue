@@ -3,55 +3,66 @@
         <div :class="$style.title">The ultimate phone number app</div>
         <div :class="$style.instruction">
             Enter your phone number here (without any spaces):
-            <input type="text" v-model="phoneNumber">
+            <input type="text" v-model="newPhoneNumber" data-testid="input">
         </div>
-        <div :class="$style.errorMessage">
+        <div :class="$style.errorMessage" data-testid="errorDiv">
             {{ errorMessagePrecedence }}
         </div>
-        <button :class="$style.submitBtn" :disabled=isButtonDisabled>Submit</button>
+        <button :class="$style.submitBtn" :disabled="isButtonDisabled" data-testid="submitBtn" @click="updateStore">Submit</button>
     </div>
 </template>
 
 <script>
+// TODO - move all pages to their own folders
+
+import { usePhoneNumberStore } from '../stores/user.js'
+import { mapStores, mapWritableState } from 'pinia'
+
 
 export default {
     name: 'PhoneNumberInput',
     data() {
         return {
-            phoneNumber: '',
-            isButtonDisabled: true,
+            newPhoneNumber: '',
         }
     },
     computed: {
+        // TODO - use mapWritableState key renaming
+        ...mapStores(usePhoneNumberStore),
+        ...mapWritableState(usePhoneNumberStore, [
+            'phoneNumber'
+        ]),
         isFieldEmpty() {
             const errorMessage = 'Please enter a phone number'
-            if (this.phoneNumber === '') {
+            if (this.newPhoneNumber === '') {
                 return true
             }
         },
         isNotOnlyNumbers() {
+            // TODO - string method / regex for finding alpha numeric characters
             const errorMessage = 'Please only enter numbers'
-            let numberFromInput = Number(this.phoneNumber)
+            let numberFromInput = Number(this.newPhoneNumber)
             if (Number.isNaN(numberFromInput)) {
                 return true
             }
-            if (this.phoneNumber.includes('.') || this.phoneNumber.includes(' ') || this.phoneNumber.includes('-')) {
+            if (this.newPhoneNumber.includes('.') || this.newPhoneNumber.includes(' ') || this.newPhoneNumber.includes('-')) {
                 return true
             }
         },
         lessThan11Digits() {
             const errorMessage = 'Please enter 11 digits'
-            if (this.phoneNumber.length < 11) {
+            if (this.newPhoneNumber.length < 11) {
                 return true
             }
         },
         moreThan11Digits() {
             const errorMessage = 'Ahaah!! Too many digits detected. Please enter only 11 digits.'
-            if (this.phoneNumber.length > 11) {
+            if (this.newPhoneNumber.length > 11) {
                 return true
             }
         },
         errorMessagePrecedence() {
+            // TODO: make data driven (with J <3)
             const errorMessage1 = 'Please enter a phone number'
             const errorMessage2 = 'Please only enter numbers'
             const errorMessage3 = 'Please enter 11 digits'
@@ -70,9 +81,22 @@ export default {
                 return errorMessage4
             }
             if (!this.isFieldEmpty && !this.isNotOnlyNumbers && !this.lessThan11Digits && !this.moreThan11Digits) {
-                this.isButtonDisabled = false
+                return null
             }
-        }
+        },
+        isButtonDisabled() {
+            if (this.errorMessagePrecedence === null) {
+                return false
+            } else {
+                return true
+            }
+        },
+    },
+    methods: {
+        updateStore() {
+            this.phoneNumber = this.newPhoneNumber
+            this.$router.push('/stats')
+        },
     }
 }
 

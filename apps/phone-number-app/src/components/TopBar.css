@@ -1,0 +1,24 @@
+* {
+    font-family: monospace;
+}
+
+.wrapper {
+    background: rgb(239, 239, 239);
+    padding-left: 25px;
+    margin-bottom: 30px;
+}
+
+.contentWrapper {
+    display: flex;
+    justify-content: left;
+}
+
+.routerLink {
+    text-decoration: none;
+    color: black;
+    padding: 10px 45px;
+}
+
+.routerLink:hover {
+    background: rgb(215, 215, 215);
+}
