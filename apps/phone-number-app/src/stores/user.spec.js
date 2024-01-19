@@ -19,7 +19,7 @@ describe('phone number store', () => {
         await submitBtn.trigger('click')
 
         const phoneNumbers = usePhoneNumberStore()
-        expect(phoneNumbers.phoneNumber). toEqual(input.element.value)
+        expect(phoneNumbers.phoneNumber).toEqual(input.element.value)
     })
     
 

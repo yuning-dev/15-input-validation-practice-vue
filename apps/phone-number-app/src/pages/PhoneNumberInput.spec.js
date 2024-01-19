@@ -9,7 +9,6 @@ describe('phone number input page', () => {
     const errorMessage3 = 'Please enter 11 digits'
     const errorMessage4 = 'Ahaah!! Too many digits detected. Please enter only 11 digits.'
 
-
     it('displays the input and submit button', () => {
         const wrapper = mount(PhoneNumberInput)
         const input = wrapper.find('[data-testid="input"]')
@@ -28,8 +27,8 @@ describe('phone number input page', () => {
         expect(errorDiv.text()).toEqual('')
 
         // TODO - update submitButton testing. See here https://stackoverflow.com/questions/70207571/using-vue-test-utils-how-can-i-check-if-a-button-is-disabled
-        // const submitBtn = wrapper.find('[data-testid="submitBtn"]')
-        // expect(submitBtn.attributes().disabled).toBe(false)
+        const submitBtn = wrapper.find('[data-testid="submitBtn"]')
+        expect(submitBtn.attributes().disabled).toBe(undefined)
     })
 
     it('displays error message 1 when the field is empty', async () => {
@@ -38,19 +37,15 @@ describe('phone number input page', () => {
         input.setValue('')
 
         const errorDiv = wrapper.find('[data-testid="errorDiv"]')
+        const submitBtn = wrapper.find('[data-testid="submitBtn"]')
 
         expect(errorDiv.text().includes(errorMessage1)).toBe(true)
         expect(errorDiv.text().includes(errorMessage2)).toBe(false)
         expect(errorDiv.text().includes(errorMessage3)).toBe(false)
         expect(errorDiv.text().includes(errorMessage4)).toBe(false)
 
-        // await wrapper.vm.$nextTick()
-
-        // const submitBtn = wrapper.find('[data-testid="submitBtn"]')
-        
-        // console.log(submitBtn.attributes())
-        // expect(submitBtn.attributes().disabled).toBe(true)
-    }),
+        expect(submitBtn.attributes().disabled).toBe('')
+    })
 
     it('displays error message 2 when any non-number characters are entered', async () => {
         const wrapper = mount(PhoneNumberInput)
@@ -61,9 +56,11 @@ describe('phone number input page', () => {
         const badInput4 = '12345678.9012'
 
         const errorDiv = wrapper.find('[data-testid="errorDiv"]')
+        const submitBtn = wrapper.find('[data-testid="submitBtn"]')
 
         await input.setValue(badInput1)
         expect(errorDiv.text().includes(errorMessage2)).toBe(true)
+        expect(submitBtn.attributes().disabled).toBe('')
 
         await input.setValue(badInput2)
         expect(errorDiv.text().includes(errorMessage2)).toBe(true)
@@ -74,7 +71,7 @@ describe('phone number input page', () => {
         await input.setValue(badInput4)
         expect(errorDiv.text().includes(errorMessage2)).toBe(true)
 
-    }),
+    })
 
     it('if no non-number characters have been entered: displays error message 3 if the input is shorter than 11 digits and error message 4 if the input is longer than 11 digits', async () => {
         const wrapper = mount(PhoneNumberInput)
@@ -92,6 +89,6 @@ describe('phone number input page', () => {
         expect(errorDiv.text().includes(errorMessage3)).toBe(false)
         expect(errorDiv.text().includes(errorMessage4)).toBe(true)
 
-    }),
+    })
 
 })
